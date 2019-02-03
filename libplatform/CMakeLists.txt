@@ -6,12 +6,14 @@ set(HEADERS
    ${HEADERS}
    ${CMAKE_CURRENT_SOURCE_DIR}/platform.h
    ${CMAKE_CURRENT_SOURCE_DIR}/motor.h
+   ${CMAKE_CURRENT_SOURCE_DIR}/current_sensor.h
 )
 
 set(SOURCE
    ${SOURCE}
    ${CMAKE_CURRENT_SOURCE_DIR}/platform.cpp
    ${CMAKE_CURRENT_SOURCE_DIR}/motor.cpp
+   ${CMAKE_CURRENT_SOURCE_DIR}/current_sensor.cpp
 )
 
 add_library(libplatform ${HEADERS} ${SOURCE})
