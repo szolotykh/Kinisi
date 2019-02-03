@@ -1,0 +1,18 @@
+cmake_minimum_required(VERSION 2.8.2)
+project(libplatform)
+enable_language(CXX)
+
+set(HEADERS
+   ${HEADERS}
+   ${CMAKE_CURRENT_SOURCE_DIR}/platform.h
+   ${CMAKE_CURRENT_SOURCE_DIR}/motor.h
+)
+
+set(SOURCE
+   ${SOURCE}
+   ${CMAKE_CURRENT_SOURCE_DIR}/platform.cpp
+   ${CMAKE_CURRENT_SOURCE_DIR}/motor.cpp
+)
+
+add_library(libplatform ${HEADERS} ${SOURCE})
+target_link_libraries(libplatform ${CMAKE_THREAD_LIBS_INIT} phidget22.so)
