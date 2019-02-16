@@ -16,7 +16,14 @@ include_directories("${PROJECT_SOURCE_DIR}/libsettings")
 include_directories("${PROJECT_SOURCE_DIR}/libplatform")
 include_directories("${PROJECT_SOURCE_DIR}/libmqtt")
 
+
+set(HEADERS
+   ${CMAKE_CURRENT_SOURCE_DIR}/settings.h
+   ${HEADERS}
+)
+
 set(SOURCE
+   ${CMAKE_CURRENT_SOURCE_DIR}/settings.cpp
    ${SOURCE}
 )
 

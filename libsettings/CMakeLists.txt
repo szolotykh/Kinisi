@@ -4,12 +4,12 @@ enable_language(CXX)
 
 set(HEADERS
    ${HEADERS}
-   ${CMAKE_CURRENT_SOURCE_DIR}/settings.h
+   ${CMAKE_CURRENT_SOURCE_DIR}/libsettings.h
 )
 
 set(SOURCE
    ${SOURCE}
-   ${CMAKE_CURRENT_SOURCE_DIR}/settings.cpp
+   ${CMAKE_CURRENT_SOURCE_DIR}/libsettings.cpp
 )
 
 add_library(libsettings ${HEADERS} ${SOURCE})
