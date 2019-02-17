@@ -7,8 +7,16 @@
 #ifndef LIBPLATFORM_PLATFORM_H
 #define LIBPLATFORM_PLATFORM_H
 
+#include <memory>
+
 namespace platform
     {
+    enum platform_type_t
+        {
+        REAL,
+        VIRTUAL
+        };
+    
     struct velocity_t
         {
         velocity_t()
@@ -39,10 +47,8 @@ namespace platform
 
         public:
             virtual void Build() = 0;
-            virtual void Test() = 0;
 
             // Speed and velocity
-            
             virtual void Move(velocity_t v) = 0;
             virtual void Forward (double speed) = 0;
             virtual void Backward (double speed) = 0;
@@ -52,6 +58,9 @@ namespace platform
 	        virtual void Right(double speed) = 0;
 	        virtual void Stop() = 0;
         };
+
+    using IPlatformPtr = std::unique_ptr<IPlatform>;
+    IPlatformPtr BuildPlatform(platform_type_t platformType);
     }
 
 #endif

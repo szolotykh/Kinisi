@@ -1,6 +1,7 @@
 #include <iostream>
 #include <memory>
 #include "mqttworker.h"
+#include "platformworker.h"
 #include "settings.h"
 #include <sstream> 
 
@@ -32,10 +33,15 @@ int main(){
         spConnectionSettings->GetUsername(),
         spConnectionSettings->GetPassword()
     };
-    robot::CMQTTWorker MQTTWorker(stConnectionSettings);
+    //robot::CMQTTWorker MQTTWorker(stConnectionSettings);
+
+
+    platform::platform_settings_t stPlatformSettings;
+    platform::CPlatformWorker PlatformWorker(stPlatformSettings);
 
     cout << "Press Enter to Continue" << endl;
     cin.ignore();
-    MQTTWorker.Stop();
+    //MQTTWorker.Stop();
+    PlatformWorker.Stop();
     return 0;
 }

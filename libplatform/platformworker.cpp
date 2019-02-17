@@ -9,7 +9,6 @@
 #include <mutex>
 
 #include "platform.h"
-#include "hwplatform.h"
 #include "platformworker.h"
 
 using namespace std;
@@ -39,15 +38,12 @@ namespace platform
     // -------------------------------------------------------------------
     void CPlatformWorker::fProcess (platform_settings_t settings)
         {
-        CHWPlatform platform;
-        platform.Build();
-        platform.Test();
+        IPlatformPtr upPlatform = BuildPlatform(platform_type_t::VIRTUAL);
         
         // Worker main loop
         while (!isStopping ())
             {
-
-            
+            upPlatform->Forward(1);
             this_thread::sleep_for(5s);
             }
         }

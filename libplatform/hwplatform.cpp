@@ -118,6 +118,6 @@ namespace platform
     // -------------------------------------------------------------------
     CHWPlatform::~CHWPlatform()
         {
-        CHWPlatform::Stop();
+        Stop();
         }
     }
