@@ -1,5 +1,5 @@
 #include <iostream>
-#include "platform.h"
+#include "hwplatform.h"
 
 using namespace std;
 
@@ -8,7 +8,7 @@ int main(){
     //PhidgetDCMotorHandle ch;
     //PhidgetReturnCode prc = PhidgetDCMotor_create(&ch);
 
-    platform::CPlatform platform;
+    platform::CHWPlatform platform;
     platform.Build();
     platform.Test();
     cout << "Press Enter to Continue" << endl;

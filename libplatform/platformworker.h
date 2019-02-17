@@ -1,37 +1,34 @@
 //*************************************************************
 //
-// File name: mqttworker.h
+// File name: platformworker.h
 //
 //*************************************************************
 
-#ifndef LIBMQTT_MQTTWORKER
-#define LIBMQTT_MQTTWORKER
+#ifndef LIBPLATFORM_PLATFORMWORKER
+#define LIBPLATFORM_PLATFORMWORKER
 
 #include <thread>
 #include <mutex>
 #include <string>
 
-namespace robot
+namespace platform
     {
-    struct connection_settings_t
+    struct platform_settings_t
         {
-        std::string host;
-        std::string username;
-        std::string password;
         };
 
-    class CMQTTWorker
+    class CPlatformWorker
         {
         public:
-            CMQTTWorker(connection_settings_t settings);
-            ~CMQTTWorker();
+            CPlatformWorker(platform_settings_t settings);
+            ~CPlatformWorker();
 
         public:
             void Stop();
 
         private:
             bool isStopping();
-            void fProcess (connection_settings_t settings);
+            void fProcess (platform_settings_t settings);
 
         private:
             std::thread m_thd;
@@ -39,4 +36,5 @@ namespace robot
             bool m_bShutdown;
         };
     }
+
 #endif

@@ -4,20 +4,8 @@
 //
 //*************************************************************
 
-#ifndef ROBOT_PLATFORM_H
-#define ROBOT_PLATFORM_H
-
-#include <phidget22.h>
-#include <memory>
-#include <motor.h>
-
-#define FRONT_DC_MC_SERIAL_NUM  487360
-#define BACK_DC_MC_SERIAL_NUM   147360
-
-#define FRONT_LEFT_MOTOR_CHANNEL    0
-#define FRONT_RIGHT_MOTOR_CHANNEL   1
-#define BACK_LEFT_MOTOR_CHANNEL     0
-#define BACK_RIGHT_MOTOR_CHANNEL    1
+#ifndef LIBPLATFORM_PLATFORM_H
+#define LIBPLATFORM_PLATFORM_H
 
 namespace platform
     {
@@ -42,35 +30,27 @@ namespace platform
         double t;
         };
 
-    class CPlatform
+    class IPlatform
         {
         public:
-            CPlatform()
-            {
-            }
-
-            virtual ~CPlatform();
+            virtual ~IPlatform()
+                {
+                }
 
         public:
-            void Build();
-            void Test();
+            virtual void Build() = 0;
+            virtual void Test() = 0;
 
             // Speed and velocity
             
-            void Move(velocity_t v);
-            void Forward (double speed);
-            void Backward (double speed);
-            void RotateLeft(double speed);
-            void RotateRight(double speed);
-	        void Left(double speed);
-	        void Right(double speed);
-	        void Stop();
-            
-        private:
-            CMotor::Ptr m_FrontLeftMotor;
-            CMotor::Ptr m_FrontRightMotor;
-            CMotor::Ptr m_BackLeftMotor;
-            CMotor::Ptr m_BackRightMotor;
+            virtual void Move(velocity_t v) = 0;
+            virtual void Forward (double speed) = 0;
+            virtual void Backward (double speed) = 0;
+            virtual void RotateLeft(double speed) = 0;
+            virtual void RotateRight(double speed) = 0;
+	        virtual void Left(double speed) = 0;
+	        virtual void Right(double speed) = 0;
+	        virtual void Stop() = 0;
         };
     }
 

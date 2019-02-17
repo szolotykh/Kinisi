@@ -7,6 +7,14 @@
 using namespace std;
 using namespace robot;
 
+namespace
+    {
+    string _BuildAddress(string protocol, string host, int port)
+        {
+        return protocol + "://" + host + ":" + to_string(port);
+        }
+    }
+
 int main(){
     cout<<"Robot"<<endl;
     
@@ -15,11 +23,12 @@ int main(){
 
     auto spConnectionSettings = Settings.GetConnectionSettings();
 
-    stringstream ssAdress;
-    ssAdress << spConnectionSettings->GetProtocol() + "://" + spConnectionSettings->GetHost() << ":" << spConnectionSettings->GetPort();
 
     robot::connection_settings_t stConnectionSettings{
-        ssAdress.str(),
+        _BuildAddress(
+            spConnectionSettings->GetProtocol(), 
+            spConnectionSettings->GetHost(),
+            spConnectionSettings->GetPort()),
         spConnectionSettings->GetUsername(),
         spConnectionSettings->GetPassword()
     };

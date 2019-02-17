@@ -14,6 +14,7 @@
 #include "motor.h"
 
 #include "platform.h"
+#include "hwplatform.h"
 
 
 namespace platform
@@ -21,7 +22,7 @@ namespace platform
     using namespace std;
 
     // -------------------------------------------------------------------
-    void CPlatform::Build()
+    void CHWPlatform::Build()
         {
         m_FrontLeftMotor = make_unique<CMotor>(FRONT_DC_MC_SERIAL_NUM,   FRONT_LEFT_MOTOR_CHANNEL);
         m_FrontRightMotor = make_unique<CMotor>(FRONT_DC_MC_SERIAL_NUM,   FRONT_RIGHT_MOTOR_CHANNEL);
@@ -40,7 +41,7 @@ namespace platform
         }
 
     // -------------------------------------------------------------------
-    void CPlatform::Move(velocity_t v)
+    void CHWPlatform::Move(velocity_t v)
         {
         m_FrontLeftMotor->SetVelocity(v.x - v.y - v.t);
 		m_FrontRightMotor->SetVelocity(v.x + v.y + v.t);
@@ -49,49 +50,49 @@ namespace platform
         }
 
     // -------------------------------------------------------------------
-    void CPlatform::Forward (double speed)
+    void CHWPlatform::Forward (double speed)
         {
         Move({speed, 0, 0});
         }
 
     // -------------------------------------------------------------------
-    void CPlatform::CPlatform::Backward (double speed)
+    void CHWPlatform::Backward (double speed)
         {
         Move({-speed, 0, 0});
         }
 
     // -------------------------------------------------------------------
-    void CPlatform::CPlatform::RotateLeft(double speed)
+    void CHWPlatform::RotateLeft(double speed)
         {
         Move({0, 0, speed});
         }
 
     // -------------------------------------------------------------------
-    void CPlatform::CPlatform::RotateRight(double speed)
+    void CHWPlatform::RotateRight(double speed)
         {
         Move({0, 0, -speed});
         }
 
     // -------------------------------------------------------------------
-    void CPlatform::CPlatform::Left(double speed)
+    void CHWPlatform::Left(double speed)
         {
         Move({0, speed, 0});
         }
 
     // -------------------------------------------------------------------
-    void CPlatform::CPlatform::Right(double speed)
+    void CHWPlatform::Right(double speed)
         {
         Move({0, -speed, 0});
         }
 
     // -------------------------------------------------------------------
-    void CPlatform::CPlatform::Stop()
+    void CHWPlatform::Stop()
         {
         Move({0, 0, 0});
         }
 
     // -------------------------------------------------------------------
-    void CPlatform::Test()
+    void CHWPlatform::Test()
         {
         Forward (1.0);
         std::this_thread::sleep_for(5s);
@@ -115,8 +116,8 @@ namespace platform
         }
 
     // -------------------------------------------------------------------
-    CPlatform::~CPlatform()
+    CHWPlatform::~CHWPlatform()
         {
-        Stop();
+        CHWPlatform::Stop();
         }
     }
