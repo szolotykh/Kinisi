@@ -1,17 +1,5 @@
 //*************************************************************
 //
-// File name: libutil.h
+// File name: libutil.cpp
 //
 //*************************************************************
-
-#ifndef LIBUTIL_UTIL_H
-#define LIBUTIL_UTIL_H
-
-#include <string>
-
-namespace vsutil
-    {
-
-    }
-
-#endif
