@@ -15,6 +15,7 @@ include_directories("${PROJECT_SOURCE_DIR}")
 include_directories("${PROJECT_SOURCE_DIR}/libsettings")
 include_directories("${PROJECT_SOURCE_DIR}/libplatform")
 include_directories("${PROJECT_SOURCE_DIR}/libmqtt")
+include_directories("${PROJECT_SOURCE_DIR}/libutil")
 
 
 set(HEADERS
@@ -31,11 +32,12 @@ set(SOURCE
 add_subdirectory("${PROJECT_SOURCE_DIR}/libsettings")
 add_subdirectory("${PROJECT_SOURCE_DIR}/libmqtt")
 add_subdirectory("${PROJECT_SOURCE_DIR}/libplatform")
+add_subdirectory("${PROJECT_SOURCE_DIR}/libutil")
 
 
 # Executables
 add_executable(robot ${SOURCE} ${HEADERS} robot.cpp)
-target_link_libraries(robot ${CMAKE_THREAD_LIBS_INIT} libmqtt libsettings libplatform)
+target_link_libraries(robot ${CMAKE_THREAD_LIBS_INIT} libutil libmqtt libsettings libplatform)
 
 add_executable(ptest platformtest.cpp)
 target_link_libraries(ptest ${CMAKE_THREAD_LIBS_INIT} libplatform)
