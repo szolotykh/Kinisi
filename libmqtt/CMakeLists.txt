@@ -6,12 +6,14 @@ set(HEADERS
    ${HEADERS}
    ${CMAKE_CURRENT_SOURCE_DIR}/mqttclient.h
    ${CMAKE_CURRENT_SOURCE_DIR}/mqttworker.h
+   ${CMAKE_CURRENT_SOURCE_DIR}/mqttcommands.h
 )
 
 set(SOURCE
    ${SOURCE}
    ${CMAKE_CURRENT_SOURCE_DIR}/mqttclient.cpp
    ${CMAKE_CURRENT_SOURCE_DIR}/mqttworker.cpp
+   ${CMAKE_CURRENT_SOURCE_DIR}/mqttcommands.cpp
 )
 
 find_package (Threads)

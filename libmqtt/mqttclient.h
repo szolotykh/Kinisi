@@ -16,9 +16,9 @@
 
 namespace vsmqtt
     {
-    typedef std::function<void(std::string)> subscription_callback_t;
-    typedef std::unordered_map<std::string, subscription_callback_t> subscriptions_map_t;
-    typedef std::shared_ptr<subscriptions_map_t> subscriptions_map_ptr;
+    using subscription_callback_t = std::function<void(std::string)>;
+    using subscriptions_map_t = std::unordered_map<std::string, subscription_callback_t>;
+    using subscriptions_map_ptr = std::shared_ptr<subscriptions_map_t>;
     
     class CSubscriptionActionListener : public virtual mqtt::iaction_listener
         {

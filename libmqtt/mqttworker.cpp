@@ -1,6 +1,6 @@
 //*************************************************************
 //
-// File name: mqttworker.h
+// File name: mqttworker.cpp
 //
 //*************************************************************
 
@@ -10,12 +10,12 @@
 #include <mutex>
 
 #include "mqttclient.h"
+#include "mqttcommands.h"
 #include "mqttworker.h"
-
 
 using namespace std;
 
-namespace robot
+namespace vsmqtt
     {
     // -------------------------------------------------------------------
     CMQTTWorker::CMQTTWorker(connection_settings_t settings)
@@ -26,15 +26,44 @@ namespace robot
         }
 
     // -------------------------------------------------------------------
+    bool CMQTTWorker::PushCommand(CMQTTCommand::Ptr command)
+        {
+        lock_guard<mutex> lockGuard(m_CommandMutex);
+        m_qCommands.push(std::move(command));
+        return true;
+        }
+
+    // -------------------------------------------------------------------
+    CMQTTCommand::Ptr CMQTTWorker::PullCommand()
+        {
+        lock_guard<mutex> lockGuard(m_CommandMutex);
+        if (m_qCommands.empty())
+            {
+            return nullptr; 
+            }
+        CMQTTCommand::Ptr command = std::move(m_qCommands.front());
+        m_qCommands.pop();
+        return std::move(command);
+        }
+
+    // -------------------------------------------------------------------
+    void CMQTTWorker::CancelAllCommands()
+        {
+        lock_guard<mutex> lockGuard(m_CommandMutex);
+        commands_queue_t empty;
+        std::swap(m_qCommands, empty);
+        }
+
+    // -------------------------------------------------------------------
     void CMQTTWorker::Stop() 
         {
-        lock_guard<mutex> lockGuard(m_mutex);
+        lock_guard<mutex> lockGuard(m_StopMutex);
         m_bShutdown = true;
         }
     // -------------------------------------------------------------------
     bool CMQTTWorker::isStopping()
         {
-        lock_guard<mutex> lockGuard(m_mutex);
+        lock_guard<mutex> lockGuard(m_StopMutex);
         return m_bShutdown;
         }
 
@@ -45,21 +74,15 @@ namespace robot
         if(!client.Connect(settings.username, settings.password)){
             return;
         }
-        client.Subscribe("robot", [](string msg){
-            cout<<"robot:"<<msg<<endl;
-        });
-
-        client.Subscribe("robot/sensor", [](string msg){
-            cout<<"robot/sensor: "<<msg<<endl;
-        });
         
         while (!isStopping ())
             {
-            // Create the payload as a text CSV string
-            string payload = "hello";
-            cout << payload << endl;
-            client.Publish("status", payload);
-            this_thread::sleep_for(5s);
+            CMQTTCommand::Ptr command = PullCommand();
+            if(command)
+                {
+                command->Execute(client);
+                }
+            this_thread::sleep_for(std::chrono::milliseconds(20));
             }
         
         client.Disconnect();

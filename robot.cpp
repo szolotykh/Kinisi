@@ -25,7 +25,7 @@ int main(){
     auto spConnectionSettings = Settings.GetConnectionSettings();
 
 
-    robot::connection_settings_t stConnectionSettings{
+    vsmqtt::connection_settings_t stConnectionSettings{
         _BuildAddress(
             spConnectionSettings->GetProtocol(), 
             spConnectionSettings->GetHost(),
@@ -33,15 +33,20 @@ int main(){
         spConnectionSettings->GetUsername(),
         spConnectionSettings->GetPassword()
     };
-    //robot::CMQTTWorker MQTTWorker(stConnectionSettings);
+    vsmqtt::CMQTTWorker MQTTWorker(stConnectionSettings);
 
+    MQTTWorker.PushCommand(make_unique<vsmqtt::CMQTTSubscribeCommand>(
+        "robot",
+        [](string msg){
+            cout<<"robot:"<<msg<<endl;
+        }));
 
-    platform::platform_settings_t stPlatformSettings;
-    platform::CPlatformWorker PlatformWorker(stPlatformSettings);
+    //platform::platform_settings_t stPlatformSettings;
+    //platform::CPlatformWorker PlatformWorker(stPlatformSettings);
 
     cout << "Press Enter to Continue" << endl;
     cin.ignore();
-    //MQTTWorker.Stop();
-    PlatformWorker.Stop();
+    MQTTWorker.Stop();
+    //PlatformWorker.Stop();
     return 0;
 }
