@@ -22,29 +22,62 @@ namespace platform
         {
         }
 
+        // -------------------------------------------------------------------
+    bool CPlatformWorker::PushCommand(CCommand::Ptr command)
+        {
+        lock_guard<mutex> lockGuard(m_CommandMutex);
+        m_qCommands.push(std::move(command));
+        return true;
+        }
+
+    // -------------------------------------------------------------------
+    CCommand::Ptr CPlatformWorker::PullCommand()
+        {
+        lock_guard<mutex> lockGuard(m_CommandMutex);
+        if (m_qCommands.empty())
+            {
+            return nullptr; 
+            }
+        CCommand::Ptr command = std::move(m_qCommands.front());
+        m_qCommands.pop();
+        return std::move(command);
+        }
+
+    // -------------------------------------------------------------------
+    void CPlatformWorker::CancelAllCommands()
+        {
+        lock_guard<mutex> lockGuard(m_CommandMutex);
+        commands_queue_t empty;
+        std::swap(m_qCommands, empty);
+        }
+
     // -------------------------------------------------------------------
     void CPlatformWorker::Stop() 
         {
-        lock_guard<mutex> lockGuard(m_mutex);
+        lock_guard<mutex> lockGuard(m_StopMutex);
         m_bShutdown = true;
         }
     // -------------------------------------------------------------------
     bool CPlatformWorker::isStopping()
         {
-        lock_guard<mutex> lockGuard(m_mutex);
+        lock_guard<mutex> lockGuard(m_StopMutex);
         return m_bShutdown;
         }
 
     // -------------------------------------------------------------------
     void CPlatformWorker::fProcess (platform_settings_t settings)
         {
-        IPlatformPtr upPlatform = BuildPlatform(platform_type_t::VIRTUAL);
+        IPlatformPtr upPlatform = BuildPlatform(platform_type_t::REAL);
         
         // Worker main loop
         while (!isStopping ())
             {
-            upPlatform->Forward(1);
-            this_thread::sleep_for(5s);
+            CCommand::Ptr command = PullCommand();
+            if(command)
+                {
+                command->Execute(upPlatform);
+                }
+            this_thread::sleep_for(std::chrono::milliseconds(20));
             }
         }
 

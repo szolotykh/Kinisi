@@ -7,9 +7,10 @@ set(HEADERS
    ${CMAKE_CURRENT_SOURCE_DIR}/platform.h
    ${CMAKE_CURRENT_SOURCE_DIR}/hwplatform.h
    ${CMAKE_CURRENT_SOURCE_DIR}/virtualplatform.h
+   ${CMAKE_CURRENT_SOURCE_DIR}/platformcommands.h
    ${CMAKE_CURRENT_SOURCE_DIR}/platformworker.h
    ${CMAKE_CURRENT_SOURCE_DIR}/devices/motor.h
-   ${CMAKE_CURRENT_SOURCE_DIR}/current_sensor.h
+   ${CMAKE_CURRENT_SOURCE_DIR}/devices/current_sensor.h
 )
 
 set(SOURCE
@@ -17,9 +18,10 @@ set(SOURCE
    ${CMAKE_CURRENT_SOURCE_DIR}/platform.cpp
    ${CMAKE_CURRENT_SOURCE_DIR}/hwplatform.cpp
    ${CMAKE_CURRENT_SOURCE_DIR}/virtualplatform.cpp
+   ${CMAKE_CURRENT_SOURCE_DIR}/platformcommands.cpp
    ${CMAKE_CURRENT_SOURCE_DIR}/platformworker.cpp
    ${CMAKE_CURRENT_SOURCE_DIR}/devices/motor.cpp
-   ${CMAKE_CURRENT_SOURCE_DIR}/current_sensor.cpp
+   ${CMAKE_CURRENT_SOURCE_DIR}/devices/current_sensor.cpp
 )
 
 

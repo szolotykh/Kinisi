@@ -35,18 +35,24 @@ int main(){
     };
     vsmqtt::CMQTTWorker MQTTWorker(stConnectionSettings);
 
-    MQTTWorker.PushCommand(make_unique<vsmqtt::CMQTTSubscribeCommand>(
-        "robot",
-        [](string msg){
-            cout<<"robot:"<<msg<<endl;
-        }));
+    platform::platform_settings_t stPlatformSettings;
+    platform::CPlatformWorker PlatformWorker(stPlatformSettings);
 
-    //platform::platform_settings_t stPlatformSettings;
-    //platform::CPlatformWorker PlatformWorker(stPlatformSettings);
+
+    MQTTWorker.PushCommand(make_unique<vsmqtt::CMQTTSubscribeCommand>(
+        "velocity",
+        [&PlatformWorker](string msg){
+            cout<<"velocity:"<<msg<<endl;
+            platform::velocity_t velocity;
+            stringstream ss;
+            ss<<msg;
+            ss >> velocity.x >>velocity.y >> velocity.t;
+            PlatformWorker.PushCommand(make_unique<platform::CMoveCommand>(velocity));
+        }));
 
     cout << "Press Enter to Continue" << endl;
     cin.ignore();
     MQTTWorker.Stop();
-    //PlatformWorker.Stop();
+    PlatformWorker.Stop();
     return 0;
 }

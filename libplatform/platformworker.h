@@ -10,6 +10,8 @@
 #include <thread>
 #include <mutex>
 #include <string>
+#include <queue>
+#include "platformcommands.h"
 
 namespace platform
     {
@@ -19,21 +21,28 @@ namespace platform
 
     class CPlatformWorker
         {
+        using commands_queue_t = std::queue<CCommand::Ptr>;
+        
         public:
             CPlatformWorker(platform_settings_t settings);
             ~CPlatformWorker();
 
         public:
+            bool PushCommand(CCommand::Ptr command);
+            void CancelAllCommands();
             void Stop();
 
         private:
+            CCommand::Ptr PullCommand();
             bool isStopping();
             void fProcess (platform_settings_t settings);
 
         private:
             std::thread m_thd;
-            std::mutex m_mutex;
+            std::mutex m_StopMutex;
+            std::mutex m_CommandMutex;
             bool m_bShutdown;
+            commands_queue_t m_qCommands;
         };
     }
 

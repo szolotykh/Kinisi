@@ -38,6 +38,3 @@ add_subdirectory("${PROJECT_SOURCE_DIR}/libutil")
 # Executables
 add_executable(robot ${SOURCE} ${HEADERS} robot.cpp)
 target_link_libraries(robot ${CMAKE_THREAD_LIBS_INIT} libutil libmqtt libsettings libplatform)
-
-add_executable(ptest platformtest.cpp)
-target_link_libraries(ptest ${CMAKE_THREAD_LIBS_INIT} libplatform)
