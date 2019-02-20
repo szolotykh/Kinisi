@@ -19,4 +19,4 @@ set(SOURCE
 find_package (Threads)
 
 add_library(libmqtt ${HEADERS} ${SOURCE})
-target_link_libraries(libmqtt ${CMAKE_THREAD_LIBS_INIT} libpaho-mqttpp3.so)
+target_link_libraries(libmqtt ${CMAKE_THREAD_LIBS_INIT} libcommon libpaho-mqttpp3.so)

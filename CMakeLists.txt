@@ -16,7 +16,7 @@ include_directories("${PROJECT_SOURCE_DIR}/libsettings")
 include_directories("${PROJECT_SOURCE_DIR}/libplatform")
 include_directories("${PROJECT_SOURCE_DIR}/libmqtt")
 include_directories("${PROJECT_SOURCE_DIR}/libutil")
-
+include_directories("${PROJECT_SOURCE_DIR}/libcommon")
 
 set(HEADERS
    ${CMAKE_CURRENT_SOURCE_DIR}/settings.h
@@ -33,6 +33,7 @@ add_subdirectory("${PROJECT_SOURCE_DIR}/libsettings")
 add_subdirectory("${PROJECT_SOURCE_DIR}/libmqtt")
 add_subdirectory("${PROJECT_SOURCE_DIR}/libplatform")
 add_subdirectory("${PROJECT_SOURCE_DIR}/libutil")
+add_subdirectory("${PROJECT_SOURCE_DIR}/libcommon")
 
 
 # Executables

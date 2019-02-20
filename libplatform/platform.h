@@ -59,7 +59,7 @@ namespace platform
 	        virtual void Stop() = 0;
         };
 
-    using IPlatformPtr = std::unique_ptr<IPlatform>;
+    using IPlatformPtr = std::shared_ptr<IPlatform>;
     IPlatformPtr BuildPlatform(platform_type_t platformType);
     }
 

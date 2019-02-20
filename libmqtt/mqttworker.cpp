@@ -26,35 +26,6 @@ namespace vsmqtt
         }
 
     // -------------------------------------------------------------------
-    bool CMQTTWorker::PushCommand(CMQTTCommand::Ptr command)
-        {
-        lock_guard<mutex> lockGuard(m_CommandMutex);
-        m_qCommands.push(std::move(command));
-        return true;
-        }
-
-    // -------------------------------------------------------------------
-    CMQTTCommand::Ptr CMQTTWorker::PullCommand()
-        {
-        lock_guard<mutex> lockGuard(m_CommandMutex);
-        if (m_qCommands.empty())
-            {
-            return nullptr; 
-            }
-        CMQTTCommand::Ptr command = std::move(m_qCommands.front());
-        m_qCommands.pop();
-        return std::move(command);
-        }
-
-    // -------------------------------------------------------------------
-    void CMQTTWorker::CancelAllCommands()
-        {
-        lock_guard<mutex> lockGuard(m_CommandMutex);
-        commands_queue_t empty;
-        std::swap(m_qCommands, empty);
-        }
-
-    // -------------------------------------------------------------------
     void CMQTTWorker::Stop() 
         {
         lock_guard<mutex> lockGuard(m_StopMutex);
@@ -70,14 +41,14 @@ namespace vsmqtt
     // -------------------------------------------------------------------
     void CMQTTWorker::fProcess (connection_settings_t settings)
         {
-        vsmqtt::CMQTTClient client (settings.host);
-        if(!client.Connect(settings.username, settings.password)){
+        auto client = make_shared<CMQTTClient>(settings.host);
+        if(!client->Connect(settings.username, settings.password)){
             return;
         }
         
         while (!isStopping ())
             {
-            CMQTTCommand::Ptr command = PullCommand();
+            vscommon::ICommand::Ptr command = PullCommand();
             if(command)
                 {
                 command->Execute(client);
@@ -85,7 +56,7 @@ namespace vsmqtt
             this_thread::sleep_for(std::chrono::milliseconds(20));
             }
         
-        client.Disconnect();
+        client->Disconnect();
         }
 
     // -------------------------------------------------------------------

@@ -22,41 +22,13 @@ namespace platform
         {
         }
 
-        // -------------------------------------------------------------------
-    bool CPlatformWorker::PushCommand(CCommand::Ptr command)
-        {
-        lock_guard<mutex> lockGuard(m_CommandMutex);
-        m_qCommands.push(std::move(command));
-        return true;
-        }
-
-    // -------------------------------------------------------------------
-    CCommand::Ptr CPlatformWorker::PullCommand()
-        {
-        lock_guard<mutex> lockGuard(m_CommandMutex);
-        if (m_qCommands.empty())
-            {
-            return nullptr; 
-            }
-        CCommand::Ptr command = std::move(m_qCommands.front());
-        m_qCommands.pop();
-        return std::move(command);
-        }
-
-    // -------------------------------------------------------------------
-    void CPlatformWorker::CancelAllCommands()
-        {
-        lock_guard<mutex> lockGuard(m_CommandMutex);
-        commands_queue_t empty;
-        std::swap(m_qCommands, empty);
-        }
-
     // -------------------------------------------------------------------
     void CPlatformWorker::Stop() 
         {
         lock_guard<mutex> lockGuard(m_StopMutex);
         m_bShutdown = true;
         }
+
     // -------------------------------------------------------------------
     bool CPlatformWorker::isStopping()
         {
@@ -67,12 +39,12 @@ namespace platform
     // -------------------------------------------------------------------
     void CPlatformWorker::fProcess (platform_settings_t settings)
         {
-        IPlatformPtr upPlatform = BuildPlatform(platform_type_t::REAL);
+        IPlatformPtr upPlatform = BuildPlatform(platform_type_t::VIRTUAL);
         
         // Worker main loop
         while (!isStopping ())
             {
-            CCommand::Ptr command = PullCommand();
+            vscommon::ICommand::Ptr command = PullCommand();
             if(command)
                 {
                 command->Execute(upPlatform);

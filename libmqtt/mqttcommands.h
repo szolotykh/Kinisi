@@ -10,33 +10,26 @@
 #include <memory>
 #include <string>
 #include "mqttclient.h"
+#include "commands.h"
 
 namespace vsmqtt
     {
-    class CMQTTCommand
-        {
-        public:
-            using Ptr = std::unique_ptr<CMQTTCommand>;
-        public:
-            virtual void Execute(CMQTTClient& mqttClient) = 0;
-        };
-
-    class CMQTTSubscribeCommand : public CMQTTCommand
+    class CMQTTSubscribeCommand : public vscommon::ICommand
         {
         public:
             CMQTTSubscribeCommand(std::string topic, subscription_callback_t callback);
-            void Execute(CMQTTClient& mqttClient);
+            void Execute(vscommon::ICommand::TargetPtr target);
 
         private:
             std::string m_topic;
             subscription_callback_t m_callback;
         };
 
-    class CMQTTPublishCommand : public CMQTTCommand
+    class CMQTTPublishCommand : public vscommon::ICommand
         {
         public:
             CMQTTPublishCommand(std::string topic, std::string msg);
-            void Execute(CMQTTClient& mqttClient);
+            void Execute(vscommon::ICommand::TargetPtr target);
 
         private:
             std::string m_topic;

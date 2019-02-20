@@ -33,4 +33,4 @@ target_include_directories(libplatform
    ${CMAKE_CURRENT_SOURCE_DIR}/devices
    )
 
-target_link_libraries(libplatform ${CMAKE_THREAD_LIBS_INIT} phidget22.so)
+target_link_libraries(libplatform ${CMAKE_THREAD_LIBS_INIT} libcommon phidget22.so)

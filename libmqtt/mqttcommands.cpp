@@ -16,6 +16,7 @@ using namespace std;
 
 namespace vsmqtt
     {
+    using namespace vscommon;
     // -------------------------------------------------------------------
     CMQTTSubscribeCommand::CMQTTSubscribeCommand(std::string topic, subscription_callback_t callback)
         : m_topic(topic)
@@ -24,9 +25,9 @@ namespace vsmqtt
         }
 
     // -------------------------------------------------------------------
-    void CMQTTSubscribeCommand::Execute(CMQTTClient& mqttClient)
+    void CMQTTSubscribeCommand::Execute(ICommand::TargetPtr target)
         {
-        mqttClient.Subscribe(m_topic, m_callback);
+        static_pointer_cast<CMQTTClient>(target)->Subscribe(m_topic, m_callback);
         }
 
     // -------------------------------------------------------------------
@@ -37,8 +38,8 @@ namespace vsmqtt
         }
 
     // -------------------------------------------------------------------
-    void CMQTTPublishCommand::Execute(CMQTTClient& mqttClient)
+    void CMQTTPublishCommand::Execute(ICommand::TargetPtr target)
         {
-        mqttClient.Publish(m_topic, m_msg);
+        static_pointer_cast<CMQTTClient>(target)->Publish(m_topic, m_msg);
         }
     }
