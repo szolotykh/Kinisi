@@ -2,6 +2,9 @@
 //
 // File name: mqttworker.h
 //
+// MQTT Worker is running MQTT client in separate thread and
+// provides command interface for expernal threads to communicate
+// with the client.
 //*************************************************************
 
 #ifndef LIBMQTT_MQTTWORKER
@@ -17,6 +20,7 @@
 
 namespace vsmqtt
     {
+    // Connection settings
     struct connection_settings_t
         {
         std::string host;
@@ -24,6 +28,7 @@ namespace vsmqtt
         std::string password;
         };
 
+    // MQTT Worker
     class CMQTTWorker : public vscommon::CCommandManager
         {
         public:

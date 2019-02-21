@@ -2,6 +2,7 @@
 //
 // File name: mqttcommands.h
 //
+// MQTT Worker commangs
 //*************************************************************
 
 #ifndef LIBMQTT_MQTTCOMMANDS
@@ -9,7 +10,7 @@
 
 #include <memory>
 #include <string>
-#include "mqttclient.h"
+#include <functional>
 #include "commands.h"
 
 namespace vsmqtt
@@ -17,12 +18,15 @@ namespace vsmqtt
     class CMQTTSubscribeCommand : public vscommon::ICommand
         {
         public:
-            CMQTTSubscribeCommand(std::string topic, subscription_callback_t callback);
+            using callback_t = std::function<void(std::string)>;
+
+        public:
+            CMQTTSubscribeCommand(std::string topic, callback_t callback);
             void Execute(vscommon::ICommand::TargetPtr target);
 
         private:
             std::string m_topic;
-            subscription_callback_t m_callback;
+            callback_t m_callback;
         };
 
     class CMQTTPublishCommand : public vscommon::ICommand

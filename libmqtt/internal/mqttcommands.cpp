@@ -18,7 +18,7 @@ namespace vsmqtt
     {
     using namespace vscommon;
     // -------------------------------------------------------------------
-    CMQTTSubscribeCommand::CMQTTSubscribeCommand(std::string topic, subscription_callback_t callback)
+    CMQTTSubscribeCommand::CMQTTSubscribeCommand(std::string topic, callback_t callback)
         : m_topic(topic)
         , m_callback(callback)
         {
