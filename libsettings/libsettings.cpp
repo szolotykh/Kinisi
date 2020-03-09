@@ -68,6 +68,9 @@ namespace
         {
         std::ifstream inputFile(fileName);
 
+        if(!inputFile.is_open())
+            return false;
+
         inputFile.seekg(0, std::ios::end);   
         strFile.reserve(inputFile.tellg());
         inputFile.seekg(0, std::ios::beg);
@@ -84,7 +87,8 @@ namespace vssettings
     bool LoadSettings(const std::string& fileName, CPropertyGroup group)
         {
         std::string strFile;
-        _ReadFile(fileName, strFile);
+        if (!_ReadFile(fileName, strFile))
+            strFile = "{}";
 
         std::string err;
         json11::Json settings = json11::Json::parse(strFile, err);
