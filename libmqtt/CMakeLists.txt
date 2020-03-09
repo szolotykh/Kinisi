@@ -33,4 +33,4 @@ target_include_directories(${PROJECT_NAME}
       ${CMAKE_CURRENT_SOURCE_DIR}/internal
    )
 
-target_link_libraries(${PROJECT_NAME} libcommon ${CMAKE_THREAD_LIBS_INIT} libpaho-mqttpp3.so)
+target_link_libraries(${PROJECT_NAME} libcommon ${CMAKE_THREAD_LIBS_INIT} libpaho-mqttpp3.so libpaho-mqtt3as.so)

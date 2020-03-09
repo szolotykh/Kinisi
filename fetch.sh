@@ -43,19 +43,22 @@ if [ ! -d "$ThirdpartyDir/paho.c" ]; then
     git clone https://github.com/eclipse/paho.mqtt.c $ThirdpartyDir/paho.c
     echo "Building paho.c"
     cd $ThirdpartyDir/paho.c
-    cmake .
-    cmake --build . --target install
+    cmake -Bbuild -H. -DPAHO_WITH_SSL=ON -DPAHO_ENABLE_TESTING=OFF
+    cmake --build build/ --target install
 else
     echo "paho exists"
 fi
+
+# configure dynamic linker run-time bindings
+ldconfig
 
 echo "Clonning paho.cpp"
 if [ ! -d "$ThirdpartyDir/paho.cpp" ]; then
     git clone https://github.com/eclipse/paho.mqtt.cpp $ThirdpartyDir/paho.cpp
     echo "Building paho.cpp"
     cd $ThirdpartyDir/paho.cpp
-    cmake .
-    cmake --build . --target install
+    cmake -Bbuild -H. -DPAHO_BUILD_DOCUMENTATION=FALSE -DPAHO_BUILD_SAMPLES=FALSE
+    sudo cmake --build build/ --target install
 else
     echo "paho exists"
 fi
@@ -100,5 +103,7 @@ else
 fi
 
 # Cleaning up
-rm -r $DownloadsDir
+cd $PWD
+rm -r $ThirdpartyDir
+
 exit 0
