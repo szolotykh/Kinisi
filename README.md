@@ -16,6 +16,20 @@ cmake .
 cmake --build .
 ```
 
+### Configure
+In order to configure the platform, you need to create settings.json file and place it next to the executable. Here is an example of settings.json file:
+```
+{
+    "connection":{
+        "protocol": "tcp",
+        "host": "localhost",
+        "port": 8883,
+        "username" : "empty",
+        "password" : ""
+    }
+}
+```
+
 ### Kinisi Wheels
 Kinisi mecanum wheels was built as a part of Kinisi robotics platform project. You can find Kinisi wheels on GitHub or Thingiverse.
 https://github.com/vsreality/KinisiWheels
