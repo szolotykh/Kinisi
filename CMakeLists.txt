@@ -39,3 +39,5 @@ add_subdirectory("${PROJECT_SOURCE_DIR}/libcommon")
 # Executables
 add_executable(robot ${SOURCE} ${HEADERS} robot.cpp)
 target_link_libraries(robot ${CMAKE_THREAD_LIBS_INIT} libutil libmqtt libsettings libplatform)
+
+add_executable(joystick ${CMAKE_CURRENT_SOURCE_DIR}/joystick/joystick.cpp)
