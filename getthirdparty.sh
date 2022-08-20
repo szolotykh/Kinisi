@@ -1,5 +1,8 @@
 #!/bin/sh
 
+apt-get update
+apt-get upgrade
+
 # Install dependency
 
 # GIT
@@ -12,6 +15,9 @@ apt-get install cmake
 apt-get install build-essential
 gcc -v
 make -v
+
+# ninja 
+apt install ninja-build
 
 # SSL
 apt-get install libssl-dev
