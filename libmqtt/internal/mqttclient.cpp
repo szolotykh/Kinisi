@@ -43,7 +43,7 @@ namespace vsmqtt
         const string TOPIC { "data/rand" };
         
         
-        m_spClient = make_shared<mqtt::async_client> (m_sAddress, "", MAX_BUFFERED_MSGS, PERSIST_DIR);
+        m_spClient = make_shared<mqtt::async_client> (m_sAddress, "kinisi-platform", MAX_BUFFERED_MSGS, PERSIST_DIR);
 
 
         // Callbacks
