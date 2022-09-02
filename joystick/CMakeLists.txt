@@ -1,1 +1,0 @@
-﻿add_executable(joystick "joystick.cpp" "joystick.h")

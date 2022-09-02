@@ -6,32 +6,21 @@
 #include <string>
 #include <sstream>
 
+#include "mqttworker.h"
+#include "settings.h"
+#include "joystick.h"
+
+
 using namespace std;
+using namespace robot;
 
-#define JS_EVENT_BUTTON         0x01    /* button pressed/released */
-#define JS_EVENT_AXIS           0x02    /* joystick moved */
-#define JS_EVENT_INIT           0x80    /* initial state of device */
-
-#define JS_BUTTON_A 0;
-#define JS_BUTTON_B 1;
-#define JS_BUTTON_X 3;
-#define JS_BUTTON_Y 4;
-#define JS_BUTTON_STICK_LB 6;
-#define JS_BUTTON_STICK_LB 7;
-#define JS_BUTTON_VIEW 10;
-#define JS_BUTTON_MENU 11;
-#define JS_BUTTON_XBOX 12;
-#define JS_BUTTON_STICK_LEFT 13;
-#define JS_BUTTON_STICK_RIGHT 14;
-
-#define JS_AXIS_STICK_LEFT_X 0
-#define JS_AXIS_STICK_LEFT_Y 1
-#define JS_AXIS_STICK_RIGHT_X 2
-#define JS_AXIS_STICK_RIGHT_Y 3
-#define JS_AXIS_RT 4
-#define JS_AXIS_LT 5
-#define JS_AXIS_DPOD_X 6
-#define JS_AXIS_DPOD_Y 7
+namespace
+{
+    string _BuildAddress(string protocol, string host, int port)
+    {
+        return protocol + "://" + host + ":" + to_string(port);
+    }
+}
 
 void print_joystick_info(int fd) {
     int axes = 0;
@@ -46,7 +35,7 @@ void print_joystick_info(int fd) {
     cout<< "Buttons: " << buttons << endl;
 }
 
-void print_joystick_event(const js_event &e)
+string joystick_event_str(const js_event &e)
 {
     stringstream output;
 
@@ -67,11 +56,11 @@ void print_joystick_event(const js_event &e)
     }
     else
     {
-        return;
+        return "";
     }
 
     output<< " " << (int)e.number << " " << (int)e.value<<endl;
-    cout << output.str();
+    return output.str();
 }
 
 int main()
@@ -87,13 +76,32 @@ int main()
 
     print_joystick_info(fd);
 
+    CRobotSettings Settings;
+    vssettings::LoadSettings("settings.json", Settings);
+
+    auto spConnectionSettings = Settings.GetConnectionSettings();
+
+
+    vsmqtt::connection_settings_t stConnectionSettings{
+        _BuildAddress(
+            spConnectionSettings->GetProtocol(),
+            spConnectionSettings->GetHost(),
+            spConnectionSettings->GetPort()),
+        spConnectionSettings->GetUsername(),
+        spConnectionSettings->GetPassword()
+    };
+    vsmqtt::CMQTTWorker MQTTWorker(stConnectionSettings);
+
     try
     {
         while(1)
         {
             struct js_event e;
             read (fd, &e, sizeof(e));
-            print_joystick_event(e);
+            string message = joystick_event_str(e);
+            cout << message;
+
+            MQTTWorker.PushCommand(make_unique<vsmqtt::CMQTTPublishCommand>("joystick", message));
         }
     }
     catch(...)
