@@ -67,8 +67,9 @@ namespace vsjoystick
             joystick_event_t joystickEvent{
                 time:e.time,
                 value : e.value,
-                type: e.type,
-                number: e.number
+                type: e.type & ~JS_EVENT_INIT,
+                number: e.number,
+                initial: e.type & JS_EVENT_INIT
             };
             
             // Pass joystick event to all worker events

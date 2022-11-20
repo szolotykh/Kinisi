@@ -5,7 +5,7 @@
 //*************************************************************
 #include <memory>
 #include "platform.h"
-#include "hwplatform.h"
+#include "kinisi_platform/kinisiplatform.h"
 #include "virtualplatform.h"
 
 using namespace std;
@@ -17,7 +17,7 @@ namespace platform
         IPlatformPtr upPlatform;
         if(platformType == platform_type_t::REAL)
             {
-            upPlatform = make_unique<CHWPlatform>();
+            upPlatform = make_shared<CKinisiPlatform>();
             }
         else
             {

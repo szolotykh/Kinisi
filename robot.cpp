@@ -5,6 +5,7 @@
 #include "joystickworker.h"
 #include "settings.h"
 #include <sstream> 
+#include <joystick.h>
 
 using namespace std;
 using namespace robot;
@@ -30,12 +31,38 @@ int main(){
     platform::platform_settings_t stPlatformSettings;
     platform::CPlatformWorker PlatformWorker(stPlatformSettings);
 
+    platform::velocity_t velocity;
+    int previousX = 0;
+
     vsjoystick::CJoystickWorker JoystickWorker(vsjoystick::settings_t{ port:JOYSTICK_PORT });
-    JoystickWorker.AddEvent(std::make_shared<vsjoystick::CJoystickEvent>(
-        [](vsjoystick::joystick_event_t event) {
-            cout << event.type << " " << event.value << endl;
+    JoystickWorker.AddEvent(std::make_shared<vsjoystick::CJoystickAxisEvent>(
+        [&PlatformWorker, &velocity, &previousX](vsjoystick::joystick_event_t event) {
+            if (event.number == JS_AXIS_STICK_LEFT_X || event.number == JS_AXIS_STICK_LEFT_Y){
+                double speed = (double)event.value / 327.68f;
+                if (event.number == JS_AXIS_STICK_LEFT_X) {
+                    speed *= -1;
+                    velocity.y = speed;
+                }
+                if (event.number == JS_AXIS_STICK_LEFT_Y) {
+                    velocity.x = speed;
+                }
+
+                if (previousX != event.value * 10 / 32768) {
+                    previousX = event.value * 10 / 32768;
+                    cout << "previousX " << previousX << endl;
+                    PlatformWorker.PushCommand(make_unique<platform::CMoveCommand>(velocity));
+                }
+
+                //cout << "Axis " << event.number << " " << speed << endl;
+            }
+        }));
+
+    JoystickWorker.AddEvent(std::make_shared<vsjoystick::CJoystickButtonEvent>(
+        [&PlatformWorker](vsjoystick::joystick_event_t event) {
+            cout << "Button " << event.number << " " << (int)event.value << endl;
         }));
     JoystickWorker.Start();
+    
 
 
 #ifdef MQTT_INTERFACE

@@ -39,8 +39,8 @@ namespace platform
     // -------------------------------------------------------------------
     void CPlatformWorker::fProcess (platform_settings_t settings)
         {
-        IPlatformPtr upPlatform = BuildPlatform(platform_type_t::VIRTUAL);
-        
+        IPlatformPtr upPlatform = BuildPlatform(platform_type_t::REAL);
+        auto ptr = upPlatform.get();
         // Worker main loop
         while (!isStopping ())
             {

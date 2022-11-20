@@ -21,23 +21,47 @@ namespace vsjoystick
         int value;
         unsigned char type;
         unsigned number;
+        bool initial = false;
     };
 
+    //----------------------------------------------------------------------
     class IJoystickEvent
     {
     public:
         using Ptr = std::shared_ptr<IJoystickEvent>;
+        using callback_t = std::function<void(joystick_event_t)>;
+
     public:
         virtual void Execute(joystick_event_t event) = 0;
     };
 
+    //----------------------------------------------------------------------
     class CJoystickEvent : public IJoystickEvent
     {
     public:
-        using callback_t = std::function<void(joystick_event_t)>;
+        CJoystickEvent(callback_t callback);
+        void Execute(joystick_event_t event);
 
+    private:
+        callback_t m_callback;
+    };
+
+    //----------------------------------------------------------------------
+    class CJoystickAxisEvent : public CJoystickEvent
+    {
     public:
-        CJoystickEvent( callback_t callback);
+        CJoystickAxisEvent(callback_t callback);
+        void Execute(joystick_event_t event);
+
+    private:
+        callback_t m_callback;
+    };
+
+    //----------------------------------------------------------------------
+    class CJoystickButtonEvent : public CJoystickEvent
+    {
+    public:
+        CJoystickButtonEvent(callback_t callback);
         void Execute(joystick_event_t event);
 
     private:
