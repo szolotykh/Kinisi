@@ -95,17 +95,12 @@ namespace platform
         //cout << "Velocity: " << v.x << " " << v.y << " " << v.t << endl;
         //unsigned char command[] = { STATUS_LED_TOGGLE };
         //int n_written = write(m_usb, command, sizeof(command));
-        //cout << (v.x + v.y + v.t) / (200 + v.t) * 100 << endl;
-        //SetMotorVelocity(3, (v.x - v.y - v.t) / (200 + v.t)*100);
-        //SetMotorVelocity(0, (v.x + v.y + v.t) / (200 + v.t)*100);
-        //SetMotorVelocity(2, (v.x + v.y - v.t) / (200 + v.t)*100);
-        //SetMotorVelocity(1, (v.x - v.y + v.t) / (200 + v.t)*100);
 
 
-        SetMotorVelocity(3, -v.x);
-        SetMotorVelocity(0, v.x);
-        SetMotorVelocity(2, -v.x);
-        SetMotorVelocity(1, v.x);
+        SetMotorVelocity(3, (v.x - v.y - v.t));
+        SetMotorVelocity(0, (v.x + v.y + v.t));
+        SetMotorVelocity(2, (v.x + v.y - v.t));
+        SetMotorVelocity(1, (v.x - v.y + v.t));
 
         //m_FrontLeftMotor->SetVelocity(v.x - v.y - v.t);
 		//m_FrontRightMotor->SetVelocity(v.x + v.y + v.t);

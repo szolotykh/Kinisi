@@ -6,6 +6,7 @@
 #include "settings.h"
 #include <sstream> 
 #include <joystick.h>
+#include "util.h"
 
 using namespace std;
 using namespace robot;
@@ -32,12 +33,13 @@ int main(){
     platform::CPlatformWorker PlatformWorker(stPlatformSettings);
 
     platform::velocity_t velocity;
-    int previousX = 0;
+    std::mutex VelocityUpdateMutex;
 
     vsjoystick::CJoystickWorker JoystickWorker(vsjoystick::settings_t{ port:JOYSTICK_PORT });
     JoystickWorker.AddEvent(std::make_shared<vsjoystick::CJoystickAxisEvent>(
-        [&PlatformWorker, &velocity, &previousX](vsjoystick::joystick_event_t event) {
+        [&PlatformWorker, &velocity, &VelocityUpdateMutex](vsjoystick::joystick_event_t event) {
             if (event.number == JS_AXIS_STICK_LEFT_X || event.number == JS_AXIS_STICK_LEFT_Y){
+                lock_guard<mutex> lockGuard(VelocityUpdateMutex);
                 double speed = (double)event.value / 327.68f;
                 if (event.number == JS_AXIS_STICK_LEFT_X) {
                     speed *= -1;
@@ -46,14 +48,8 @@ int main(){
                 if (event.number == JS_AXIS_STICK_LEFT_Y) {
                     velocity.x = speed;
                 }
-
-                if (previousX != event.value * 10 / 32768) {
-                    previousX = event.value * 10 / 32768;
-                    cout << "previousX " << previousX << endl;
-                    PlatformWorker.PushCommand(make_unique<platform::CMoveCommand>(velocity));
-                }
-
-                //cout << "Axis " << event.number << " " << speed << endl;
+                
+                cout << "Axis " << event.number << " " << speed << endl;
             }
         }));
 
@@ -63,7 +59,12 @@ int main(){
         }));
     JoystickWorker.Start();
     
-
+    // Velocity publisher (100ms interval)
+    vsutil::CTimerInterval VelocityUpdater([&PlatformWorker, &velocity, &VelocityUpdateMutex](){
+            lock_guard<mutex> lockGuard(VelocityUpdateMutex);
+            PlatformWorker.PushCommand(make_unique<platform::CMoveCommand>(velocity));
+        },
+        100);
 
 #ifdef MQTT_INTERFACE
     vsmqtt::connection_settings_t stConnectionSettings{
@@ -96,6 +97,7 @@ int main(){
 #ifdef MQTT_INTERFACE
     MQTTWorker.Stop();
 #endif // MQTT_INTERFACE
+    VelocityUpdater.Stop();
     JoystickWorker.Stop();
     PlatformWorker.Stop();
     return 0;
