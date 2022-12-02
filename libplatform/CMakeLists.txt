@@ -8,9 +8,6 @@ set(HEADERS
    ${CMAKE_CURRENT_SOURCE_DIR}/virtualplatform.h
    ${CMAKE_CURRENT_SOURCE_DIR}/platformcommands.h
    ${CMAKE_CURRENT_SOURCE_DIR}/platformworker.h
-   ${CMAKE_CURRENT_SOURCE_DIR}/phidget_platform/hwplatform.h
-   ${CMAKE_CURRENT_SOURCE_DIR}/phidget_platform/motor.h
-   ${CMAKE_CURRENT_SOURCE_DIR}/phidget_platform/current_sensor.h
 )
 
 set(SOURCE
@@ -19,9 +16,6 @@ set(SOURCE
    ${CMAKE_CURRENT_SOURCE_DIR}/virtualplatform.cpp
    ${CMAKE_CURRENT_SOURCE_DIR}/platformcommands.cpp
    ${CMAKE_CURRENT_SOURCE_DIR}/platformworker.cpp
-   ${CMAKE_CURRENT_SOURCE_DIR}/phidget_platform/hwplatform.cpp
-   ${CMAKE_CURRENT_SOURCE_DIR}/phidget_platform/motor.cpp
-   ${CMAKE_CURRENT_SOURCE_DIR}/phidget_platform/current_sensor.cpp
 )
 
 
@@ -33,4 +27,4 @@ target_include_directories(libplatform
    ${CMAKE_CURRENT_SOURCE_DIR}/devices
    )
 
-target_link_libraries(libplatform ${CMAKE_THREAD_LIBS_INIT} libcommon phidget22.so)
+target_link_libraries(libplatform ${CMAKE_THREAD_LIBS_INIT} libcommon)
