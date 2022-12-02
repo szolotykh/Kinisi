@@ -19,6 +19,7 @@
 #include "kinisiplatform.h"
 #include <string.h>
 #include <termios.h>
+#include <assert.h>
 
 #define SPEED_RESOLUTION 840
 
@@ -66,27 +67,25 @@ namespace platform
             std::cout << "> Error " << errno << " from tcsetattr" << std::endl;
             }
 
-        InitMotor(0);
-        InitMotor(1);
-        InitMotor(2);
-        InitMotor(3);
+        InitPlatform();
     }
 
     // -------------------------------------------------------------------
-    void CKinisiPlatform::InitMotor(uint8_t motorIndex)
+    void CKinisiPlatform::InitPlatform()
     {
-        unsigned char initCmd[] = { INITIALIZE_MOTOR, motorIndex };
+        unsigned char initCmd[] = { PLATFORM_INITIALIZE };
         int n_written = write(m_usb, initCmd, sizeof(initCmd));
         std::this_thread::sleep_for(0.5s);
     }
 
     // -------------------------------------------------------------------
-    void CKinisiPlatform::SetMotorVelocity(uint8_t motorIndex, double velocity)
+    void CKinisiPlatform::SetVelocityInput(velocity_t v)
     {
-        bool direction = velocity >= 0;
-        uint16_t speed = abs(velocity) / 100 * SPEED_RESOLUTION;
-        unsigned char M0Cmd[] = { SET_MOTOR_SPEED, motorIndex, direction, speed, speed >> 8 };
-        int n_written = write(m_usb, M0Cmd, sizeof(M0Cmd));
+        assert(v.x > 100 || v.x < -100);
+        assert(v.y > 100 || v.y < -100);
+        assert(v.t > 100 || v.t < -100);
+        unsigned char cmd[] = { SET_MOTOR_SPEED, v.x, v.y, v.t};
+        int n_written = write(m_usb, cmd, sizeof(cmd));
     } 
 
     // -------------------------------------------------------------------
@@ -96,11 +95,7 @@ namespace platform
         //unsigned char command[] = { STATUS_LED_TOGGLE };
         //int n_written = write(m_usb, command, sizeof(command));
 
-
-        SetMotorVelocity(3, (v.x - v.y - v.t));
-        SetMotorVelocity(0, (v.x + v.y + v.t));
-        SetMotorVelocity(2, (v.x + v.y - v.t));
-        SetMotorVelocity(1, (v.x - v.y + v.t));
+        SetVelocityInput(v);
 
         //m_FrontLeftMotor->SetVelocity(v.x - v.y - v.t);
 		//m_FrontRightMotor->SetVelocity(v.x + v.y + v.t);
@@ -109,37 +104,37 @@ namespace platform
     }
 
     // -------------------------------------------------------------------
-    void CKinisiPlatform::Forward (double speed)
+    void CKinisiPlatform::Forward (char speed)
         {
         Move({speed, 0, 0});
         }
 
     // -------------------------------------------------------------------
-    void CKinisiPlatform::Backward (double speed)
+    void CKinisiPlatform::Backward (char speed)
         {
         Move({-speed, 0, 0});
         }
 
     // -------------------------------------------------------------------
-    void CKinisiPlatform::RotateLeft(double speed)
+    void CKinisiPlatform::RotateLeft(char speed)
         {
         Move({0, 0, speed});
         }
 
     // -------------------------------------------------------------------
-    void CKinisiPlatform::RotateRight(double speed)
+    void CKinisiPlatform::RotateRight(char speed)
         {
         Move({0, 0, -speed});
         }
 
     // -------------------------------------------------------------------
-    void CKinisiPlatform::Left(double speed)
+    void CKinisiPlatform::Left(char speed)
         {
         Move({0, speed, 0});
         }
 
     // -------------------------------------------------------------------
-    void CKinisiPlatform::Right(double speed)
+    void CKinisiPlatform::Right(char speed)
         {
         Move({0, -speed, 0});
         }

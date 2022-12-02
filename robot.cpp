@@ -40,7 +40,7 @@ int main(){
         [&PlatformWorker, &velocity, &VelocityUpdateMutex](vsjoystick::joystick_event_t event) {
             if (event.number == JS_AXIS_STICK_LEFT_X || event.number == JS_AXIS_STICK_LEFT_Y){
                 lock_guard<mutex> lockGuard(VelocityUpdateMutex);
-                double speed = (double)event.value / 327.68f;
+                char speed = (double)event.value / 327.68f;
                 if (event.number == JS_AXIS_STICK_LEFT_X) {
                     speed *= -1;
                     velocity.y = speed;

@@ -26,7 +26,7 @@ namespace platform
         {
         }
 
-        velocity_t (double _x, double _y, double _t)
+        velocity_t (char _x, char _y, char _t)
         : x(_x)
         , y(_y)
         , t(_t)
@@ -50,12 +50,12 @@ namespace platform
 
             // Speed and velocity
             virtual void Move(velocity_t v) = 0;
-            virtual void Forward (double speed) = 0;
-            virtual void Backward (double speed) = 0;
-            virtual void RotateLeft(double speed) = 0;
-            virtual void RotateRight(double speed) = 0;
-	        virtual void Left(double speed) = 0;
-	        virtual void Right(double speed) = 0;
+            virtual void Forward (char speed) = 0;
+            virtual void Backward (char speed) = 0;
+            virtual void RotateLeft(char speed) = 0;
+            virtual void RotateRight(char speed) = 0;
+	        virtual void Left(char speed) = 0;
+	        virtual void Right(char speed) = 0;
 	        virtual void Stop() = 0;
         };
 

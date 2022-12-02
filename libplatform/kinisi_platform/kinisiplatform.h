@@ -47,6 +47,10 @@
 #define ENCODER_2 0x02
 #define ENCODER_3 0x03
 
+// Platform
+#define PLATFORM_INITIALIZE 0x30
+#define PLATFORM_SET_VELOCITY_INPUT 0x31
+
 namespace platform
     {
     class CKinisiPlatform : public IPlatform
@@ -62,17 +66,17 @@ namespace platform
             // Speed and velocity
             
             void Move(velocity_t v) override;
-            void Forward (double speed) override;
-            void Backward (double speed) override;
-            void RotateLeft(double speed) override;
-            void RotateRight(double speed) override;
-	        void Left(double speed) override;
-	        void Right(double speed) override;
+            void Forward (char speed) override;
+            void Backward (char speed) override;
+            void RotateLeft(char speed) override;
+            void RotateRight(char speed) override;
+	        void Left(char speed) override;
+	        void Right(char speed) override;
 	        void Stop() override;
 
         private:
-            void InitMotor(uint8_t motorIndex);
-            void SetMotorVelocity(uint8_t motorIndex, double velocity);
+            void InitPlatform();
+            void SetVelocityInput(velocity_t v);
         
         private:
             int m_usb;

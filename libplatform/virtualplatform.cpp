@@ -32,42 +32,42 @@ namespace platform
         }
 
     // -------------------------------------------------------------------
-    void CVirtualPlatform::Forward (double speed)
+    void CVirtualPlatform::Forward (char speed)
         {
         cout<<"FORWARD. Speed: " << speed << endl;
         Move({speed, 0, 0});
         }
 
     // -------------------------------------------------------------------
-    void CVirtualPlatform::Backward (double speed)
+    void CVirtualPlatform::Backward (char speed)
         {
         cout<<"BACKWARD. Speed: " << speed << endl;
         Move({-speed, 0, 0});
         }
 
     // -------------------------------------------------------------------
-    void CVirtualPlatform::RotateLeft(double speed)
+    void CVirtualPlatform::RotateLeft(char speed)
         {
         cout<<"ROTATE LEFT. Speed: " << speed << endl;
         Move({0, 0, speed});
         }
 
     // -------------------------------------------------------------------
-    void CVirtualPlatform::RotateRight(double speed)
+    void CVirtualPlatform::RotateRight(char speed)
         {
         cout << "ROTATE RIGHE. Speed: " << speed << endl;
         Move({0, 0, -speed});
         }
 
     // -------------------------------------------------------------------
-    void CVirtualPlatform::Left(double speed)
+    void CVirtualPlatform::Left(char speed)
         {
         cout << "LEFT. Speed: " << speed << endl;
         Move({0, speed, 0});
         }
 
     // -------------------------------------------------------------------
-    void CVirtualPlatform::Right(double speed)
+    void CVirtualPlatform::Right(char speed)
         {
         cout << "RIGHE. Speed: " << speed << endl;
         Move({0, -speed, 0});
