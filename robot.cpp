@@ -80,7 +80,7 @@ int main(){
             //cout << "Button " << event.number << " " << (int)event.value << endl;
             if (event.number == 11 && event.value == 1) {
                 isStopping = true;
-                cout << "Stopping."
+                cout << "Stopping.";
             }
         }));
     JoystickWorker.Start();
