@@ -27,7 +27,10 @@ int main(){
     bool isStopping = false;
     
     CRobotSettings Settings;
-    vssettings::LoadSettings("settings.json", Settings);
+    if (!vssettings::LoadSettings("settings.json", Settings)) {
+        cout << "Fail to load settings.json file." << endl;
+        return 0;
+    }
 
     auto spConnectionSettings = Settings.GetConnectionSettings();
 
@@ -78,7 +81,7 @@ int main(){
     JoystickWorker.AddEvent(std::make_shared<vsjoystick::CJoystickButtonEvent>(
         [&PlatformWorker, &isStopping](vsjoystick::joystick_event_t event) {
             //cout << "Button " << event.number << " " << (int)event.value << endl;
-            if (event.number == 11 && event.value == 1) {
+            if (event.number == JS_BUTTON_MENU && event.value == 1 && !event.initial) {
                 isStopping = true;
                 cout << "Stopping.";
             }
@@ -95,6 +98,11 @@ int main(){
     while (!isStopping) {
         this_thread::sleep_for(std::chrono::milliseconds(100));
     }
+
+    // Stop all motors
+    velocity = { 0, 0, 0 };
+    PlatformWorker.PushCommand(make_unique<platform::CMoveCommand>(velocity));
+    this_thread::sleep_for(std::chrono::milliseconds(50));
 
 #ifdef MQTT_INTERFACE
     vsmqtt::connection_settings_t stConnectionSettings{

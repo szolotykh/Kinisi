@@ -88,10 +88,16 @@ namespace vssettings
         {
         std::string strFile;
         if (!_ReadFile(fileName, strFile))
-            strFile = "{}";
+        {
+            return false;
+        }
 
         std::string err;
         json11::Json settings = json11::Json::parse(strFile, err);
+        if (!err.empty())
+        {
+            return false;
+        }
 
         if(settings.is_object())
             {

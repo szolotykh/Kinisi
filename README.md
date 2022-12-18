@@ -15,7 +15,7 @@ apt-get upgrade
 sudo ./getthirdparty.sh
 mkdir ./build
 cd ./build
-cmake .
+cmake . 
 cmake --build .
 ```
 

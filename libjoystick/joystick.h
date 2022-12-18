@@ -2,17 +2,17 @@
 #define JS_EVENT_AXIS           0x02    /* joystick moved */
 #define JS_EVENT_INIT           0x80    /* initial state of device */
 
-#define JS_BUTTON_A 0;
-#define JS_BUTTON_B 1;
-#define JS_BUTTON_X 3;
-#define JS_BUTTON_Y 4;
-#define JS_BUTTON_STICK_LB 6;
-#define JS_BUTTON_STICK_LB 7;
-#define JS_BUTTON_VIEW 10;
-#define JS_BUTTON_MENU 11;
-#define JS_BUTTON_XBOX 12;
-#define JS_BUTTON_STICK_LEFT 13;
-#define JS_BUTTON_STICK_RIGHT 14;
+#define JS_BUTTON_A 0
+#define JS_BUTTON_B 1
+#define JS_BUTTON_X 3
+#define JS_BUTTON_Y 4
+#define JS_BUTTON_STICK_LB 6
+#define JS_BUTTON_STICK_LB 7
+#define JS_BUTTON_VIEW 10
+#define JS_BUTTON_MENU 11
+#define JS_BUTTON_XBOX 12
+#define JS_BUTTON_STICK_LEFT 13
+#define JS_BUTTON_STICK_RIGHT 14
 
 #define JS_AXIS_STICK_LEFT_X 0
 #define JS_AXIS_STICK_LEFT_Y 1
