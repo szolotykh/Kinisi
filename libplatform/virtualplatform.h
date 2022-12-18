@@ -22,12 +22,12 @@ namespace platform
 
             // Speed and velocity
             void Move(velocity_t v) override;
-            void Forward (char speed) override;
-            void Backward (char speed) override;
-            void RotateLeft(char speed) override;
-            void RotateRight(char speed) override;
-	        void Left(char speed) override;
-	        void Right(char speed) override;
+            void Forward (int speed) override;
+            void Backward (int speed) override;
+            void RotateLeft(int speed) override;
+            void RotateRight(int speed) override;
+	        void Left(int speed) override;
+	        void Right(int speed) override;
 	        void Stop() override;
             
         private:

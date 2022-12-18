@@ -26,16 +26,16 @@ namespace platform
         {
         }
 
-        velocity_t (char _x, char _y, char _t)
+        velocity_t (int _x, int _y, int _t)
         : x(_x)
         , y(_y)
         , t(_t)
         {
         }
 
-        double x;
-        double y;
-        double t;
+        int x;
+        int y;
+        int t;
         };
 
     class IPlatform
@@ -50,12 +50,12 @@ namespace platform
 
             // Speed and velocity
             virtual void Move(velocity_t v) = 0;
-            virtual void Forward (char speed) = 0;
-            virtual void Backward (char speed) = 0;
-            virtual void RotateLeft(char speed) = 0;
-            virtual void RotateRight(char speed) = 0;
-	        virtual void Left(char speed) = 0;
-	        virtual void Right(char speed) = 0;
+            virtual void Forward (int speed) = 0;
+            virtual void Backward (int speed) = 0;
+            virtual void RotateLeft(int speed) = 0;
+            virtual void RotateRight(int speed) = 0;
+	        virtual void Left(int speed) = 0;
+	        virtual void Right(int speed) = 0;
 	        virtual void Stop() = 0;
         };
 

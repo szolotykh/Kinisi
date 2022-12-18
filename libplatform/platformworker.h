@@ -27,7 +27,7 @@ namespace platform
             CPlatformWorker(platform_settings_t settings);
             ~CPlatformWorker();
 
-        public:
+        public:    
             void Stop();
 
         private:

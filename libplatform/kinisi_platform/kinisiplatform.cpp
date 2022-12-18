@@ -81,10 +81,11 @@ namespace platform
     // -------------------------------------------------------------------
     void CKinisiPlatform::SetVelocityInput(velocity_t v)
     {
-        assert(v.x > 100 || v.x < -100);
-        assert(v.y > 100 || v.y < -100);
-        assert(v.t > 100 || v.t < -100);
-        unsigned char cmd[] = { SET_MOTOR_SPEED, v.x, v.y, v.t};
+        //assert(v.x <= 100 || v.x >= -100);
+        //assert(v.y <= 100 || v.y >= -100);
+        //assert(v.t <= 100 || v.t >= -100);
+
+        unsigned char cmd[] = { PLATFORM_SET_VELOCITY_INPUT, v.x, v.y, v.t};
         int n_written = write(m_usb, cmd, sizeof(cmd));
     } 
 
@@ -104,37 +105,37 @@ namespace platform
     }
 
     // -------------------------------------------------------------------
-    void CKinisiPlatform::Forward (char speed)
+    void CKinisiPlatform::Forward (int speed)
         {
         Move({speed, 0, 0});
         }
 
     // -------------------------------------------------------------------
-    void CKinisiPlatform::Backward (char speed)
+    void CKinisiPlatform::Backward (int speed)
         {
         Move({-speed, 0, 0});
         }
 
     // -------------------------------------------------------------------
-    void CKinisiPlatform::RotateLeft(char speed)
+    void CKinisiPlatform::RotateLeft(int speed)
         {
         Move({0, 0, speed});
         }
 
     // -------------------------------------------------------------------
-    void CKinisiPlatform::RotateRight(char speed)
+    void CKinisiPlatform::RotateRight(int speed)
         {
         Move({0, 0, -speed});
         }
 
     // -------------------------------------------------------------------
-    void CKinisiPlatform::Left(char speed)
+    void CKinisiPlatform::Left(int speed)
         {
         Move({0, speed, 0});
         }
 
     // -------------------------------------------------------------------
-    void CKinisiPlatform::Right(char speed)
+    void CKinisiPlatform::Right(int speed)
         {
         Move({0, -speed, 0});
         }

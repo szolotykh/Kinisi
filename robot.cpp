@@ -23,6 +23,8 @@ namespace
 
 int main(){
     cout<<"Robot"<<endl;
+
+    bool isStopping = false;
     
     CRobotSettings Settings;
     vssettings::LoadSettings("settings.json", Settings);
@@ -37,25 +39,49 @@ int main(){
 
     vsjoystick::CJoystickWorker JoystickWorker(vsjoystick::settings_t{ port:JOYSTICK_PORT });
     JoystickWorker.AddEvent(std::make_shared<vsjoystick::CJoystickAxisEvent>(
-        [&PlatformWorker, &velocity, &VelocityUpdateMutex](vsjoystick::joystick_event_t event) {
-            if (event.number == JS_AXIS_STICK_LEFT_X || event.number == JS_AXIS_STICK_LEFT_Y){
+        [&PlatformWorker, &velocity, &VelocityUpdateMutex](vsjoystick::joystick_event_t event)
+        {
+            switch (event.number)
+            {
+                case JS_AXIS_STICK_LEFT_X:
+                {
                 lock_guard<mutex> lockGuard(VelocityUpdateMutex);
-                char speed = (double)event.value / 327.68f;
-                if (event.number == JS_AXIS_STICK_LEFT_X) {
-                    speed *= -1;
-                    velocity.y = speed;
+                int speed = (double)event.value / 327.68f;
+                velocity.t = -speed;
                 }
-                if (event.number == JS_AXIS_STICK_LEFT_Y) {
-                    velocity.x = speed;
+                break;
+
+            case JS_AXIS_STICK_LEFT_Y:
+                {
+                lock_guard<mutex> lockGuard(VelocityUpdateMutex);
+                int speed = (double)event.value / 327.68f;
+                velocity.x = speed;
                 }
-                
-                cout << "Axis " << event.number << " " << speed << endl;
+                break;
+
+            case JS_AXIS_STICK_RIGHT_X:
+                {
+                lock_guard<mutex> lockGuard(VelocityUpdateMutex);
+                int speed = (double)event.value / 327.68f;
+                velocity.y = speed;
+                }
+                break;
+
+                //cout << "Axis " << event.number << " " << (int)speed << endl;
+                //cout << "event.value " << event.number << " " << (int)event.value << endl;
+
+            default:
+                break;
             }
         }));
 
     JoystickWorker.AddEvent(std::make_shared<vsjoystick::CJoystickButtonEvent>(
-        [&PlatformWorker](vsjoystick::joystick_event_t event) {
-            cout << "Button " << event.number << " " << (int)event.value << endl;
+        [&PlatformWorker, &isStopping](vsjoystick::joystick_event_t event) {
+            //cout << "Button " << event.number << " " << (int)event.value << endl;
+            if (event.number == 11 && event.value == 1) {
+                isStopping = true;
+                cout << "Stopping."
+            }
         }));
     JoystickWorker.Start();
     
@@ -65,6 +91,10 @@ int main(){
             PlatformWorker.PushCommand(make_unique<platform::CMoveCommand>(velocity));
         },
         100);
+
+    while (!isStopping) {
+        this_thread::sleep_for(std::chrono::milliseconds(100));
+    }
 
 #ifdef MQTT_INTERFACE
     vsmqtt::connection_settings_t stConnectionSettings{
@@ -89,10 +119,6 @@ int main(){
         }));
 #endif // MQTT_INTERFACE
 
-
-
-    cout << "Press Enter to Continue" << endl;
-    cin.ignore();
 
 #ifdef MQTT_INTERFACE
     MQTTWorker.Stop();
