@@ -18,7 +18,7 @@ namespace platform
             ~CVirtualPlatform() override;
 
         public:
-            void Build() override;
+            bool Start() override;
 
             // Speed and velocity
             void Move(velocity_t v) override;

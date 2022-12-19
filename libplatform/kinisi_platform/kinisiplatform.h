@@ -60,7 +60,7 @@ namespace platform
             ~CKinisiPlatform() override;
 
         public:
-            void Build() override;
+            bool Start() override;
             void Test();
 
             // Speed and velocity

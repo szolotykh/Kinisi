@@ -46,7 +46,7 @@ namespace platform
                 }
 
         public:
-            virtual void Build() = 0;
+            virtual bool Start() = 0;
 
             // Speed and velocity
             virtual void Move(velocity_t v) = 0;

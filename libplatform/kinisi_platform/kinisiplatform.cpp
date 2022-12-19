@@ -28,10 +28,14 @@ namespace platform
     using namespace std;
 
     // -------------------------------------------------------------------
-    void CKinisiPlatform::Build()
+    bool CKinisiPlatform::Start()
     {
         m_usb = open("/dev/ttyACM0", O_RDWR | O_NOCTTY);
         cout << "> m_usb: " << m_usb << endl;
+        if (m_usb == -1)
+        {
+            return false;
+        }
         
         struct termios tty;
 
@@ -68,6 +72,7 @@ namespace platform
             }
 
         InitPlatform();
+        return true;
     }
 
     // -------------------------------------------------------------------

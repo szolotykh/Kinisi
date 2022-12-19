@@ -7,7 +7,7 @@
 #define JS_BUTTON_X 3
 #define JS_BUTTON_Y 4
 #define JS_BUTTON_STICK_LB 6
-#define JS_BUTTON_STICK_LB 7
+#define JS_BUTTON_STICK_RB 7
 #define JS_BUTTON_VIEW 10
 #define JS_BUTTON_MENU 11
 #define JS_BUTTON_XBOX 12

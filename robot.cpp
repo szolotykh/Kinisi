@@ -21,11 +21,10 @@ namespace
         }
     }
 
-int main(){
-    cout<<"Robot"<<endl;
-
+int main() {
+    cout << "Robot" << endl;
     bool isStopping = false;
-    
+
     CRobotSettings Settings;
     if (!vssettings::LoadSettings("settings.json", Settings)) {
         cout << "Fail to load settings.json file." << endl;
@@ -36,6 +35,11 @@ int main(){
 
     platform::platform_settings_t stPlatformSettings;
     platform::CPlatformWorker PlatformWorker(stPlatformSettings);
+    if (!PlatformWorker.Start())
+    {
+        cout << "Platform was not initialized." << endl;
+        return 0;
+    }
 
     platform::velocity_t velocity;
     std::mutex VelocityUpdateMutex;

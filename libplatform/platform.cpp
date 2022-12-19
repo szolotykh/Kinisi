@@ -23,7 +23,6 @@ namespace platform
             {
             upPlatform = make_unique<CVirtualPlatform>();
             }
-        upPlatform->Build();
         return upPlatform;
         }
     }

@@ -16,8 +16,9 @@ namespace platform
     using namespace std;
 
     // -------------------------------------------------------------------
-    void CVirtualPlatform::Build()
+    bool CVirtualPlatform::Start()
         {
+        return true;
         }
 
     // -------------------------------------------------------------------
