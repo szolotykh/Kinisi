@@ -31,8 +31,7 @@ namespace platform
             return false;
         }
 
-        std::thread worker_thd(&CPlatformWorker::fProcess, this, upPlatform);
-        m_thd.swap(worker_thd);
+        m_thd = std::thread (&CPlatformWorker::fProcess, this, upPlatform);
         return true;
     }
 

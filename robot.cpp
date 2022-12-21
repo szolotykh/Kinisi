@@ -12,6 +12,8 @@ using namespace std;
 using namespace robot;
 
 #define JOYSTICK_PORT "/dev/input/js0"
+#define JOYSTICK_RETRIES_NUMBER 10
+#define JOYSTICK_RETRYES_INTERVAL 5s
 
 namespace
     {
@@ -90,7 +92,24 @@ int main() {
                 cout << "Stopping.";
             }
         }));
-    JoystickWorker.Start();
+
+    int retryNumber = 1;
+    while (!JoystickWorker.Start() && retryNumber <= JOYSTICK_RETRIES_NUMBER)
+    {
+        cout << "Joystick is not connected. Count: " << retryNumber << endl;
+        this_thread::sleep_for(JOYSTICK_RETRYES_INTERVAL);
+        retryNumber++;
+    }
+    if (JoystickWorker.IsConnected())
+    {
+        cout << "Joystick is connected." << endl;
+    }
+    else
+    {
+        cout << "Joystick is not connected." << endl;
+        PlatformWorker.Stop();
+        return 0;
+    }
     
     // Velocity publisher (100ms interval)
     vsutil::CTimerInterval VelocityUpdater([&PlatformWorker, &velocity, &VelocityUpdateMutex](){

@@ -29,23 +29,40 @@ namespace vsjoystick
         CJoystickWorker(settings_t settings);
         ~CJoystickWorker();
 
+    private:
+        enum EWorkerState
+        {
+            Stopped = 0,
+            Stopping,
+            Starting,
+            Running
+        };
+
+    private:
+        bool IsStop();
+        bool IsStopping();
+        bool IsRunning();
+        bool isStarting();
+
+        void SetState(EWorkerState state);
+
+        void fProcess(int fd);
+
     public:
-        void Start();
+        bool Start();
         void Stop();
+        bool IsConnected();
         bool AddEvent(IJoystickEvent::Ptr event);
 
     private:
-        bool isStopping();
-        void fProcess(settings_t settings);
+        int m_fd;
 
-    private:
         const settings_t m_settings;
         std::vector<IJoystickEvent::Ptr> m_events;
         std::thread m_thd;
-        std::mutex m_StopMutex;
+        std::mutex m_StateMutex;
 
-        bool m_isRunning;
-        bool m_bShutdown;
+        EWorkerState m_state;
     };
 }
 #endif

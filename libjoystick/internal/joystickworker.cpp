@@ -15,8 +15,7 @@ using namespace std;
 namespace vsjoystick
 {
     CJoystickWorker::CJoystickWorker(settings_t settings)
-        : m_isRunning(false)
-        , m_bShutdown(false)
+        : m_state(EWorkerState::Stopped)
         , m_settings(settings)
     {
         cout << "CJoystickWorker" << endl;
@@ -25,41 +24,36 @@ namespace vsjoystick
     // -------------------------------------------------------------------
     bool CJoystickWorker::AddEvent(IJoystickEvent::Ptr event)
     {
-        if (m_isRunning) {
+        if (IsStop()) {
+            m_events.push_back(event);
+            return true;
+        }
+        return false;
+    }
+
+    // -------------------------------------------------------------------
+    bool CJoystickWorker::Start()
+    {
+        if (IsRunning())
+        {
+            return true;
+        }
+
+        int fd = open(m_settings.port.c_str(), O_RDONLY);
+        if (fd < 0)
+        {
             return false;
         }
 
-        m_events.push_back(event);
+        SetState(Running);
+        m_thd = std::thread(&CJoystickWorker::fProcess, this, fd);
         return true;
     }
 
     // -------------------------------------------------------------------
-    void CJoystickWorker::Start()
+    void CJoystickWorker::fProcess(int fd)
     {
-        m_isRunning = true;
-        m_thd = std::thread(&CJoystickWorker::fProcess, this, m_settings);
-    }
-
-    // -------------------------------------------------------------------
-    void CJoystickWorker::Stop()
-    {
-        if (m_isRunning) {
-            lock_guard<mutex> lockGuard(m_StopMutex);
-            m_bShutdown = true;
-        }
-    }
-
-    // -------------------------------------------------------------------
-    void CJoystickWorker::fProcess(settings_t settings)
-    {
-        int fd = open(settings.port.c_str(), O_RDONLY);
-        if (fd < 0)
-        {
-            cout << "Joystick is not connected." << endl;
-            return;
-        }
-
-        while (!isStopping())
+        while (!IsStopping())
         {
             js_event e;
             read(fd, &e, sizeof(e));
@@ -77,19 +71,63 @@ namespace vsjoystick
                 we->Execute(joystickEvent);
             }
         }
-
         close(fd);
+        SetState(Stopped);
     }
 
-    bool CJoystickWorker::isStopping()
+    // -------------------------------------------------------------------
+    void CJoystickWorker::Stop()
     {
-        lock_guard<mutex> lockGuard(m_StopMutex);
-        return m_bShutdown;
+        SetState(Stopping);
+    }
+
+    // -------------------------------------------------------------------
+    bool CJoystickWorker::IsConnected()
+    {
+        return IsRunning();
+    }
+
+    // -------------------------------------------------------------------
+    bool CJoystickWorker::IsStop()
+    {
+        lock_guard<mutex> lockGuard(m_StateMutex);
+        return m_state == EWorkerState::Stopped;
+    }
+
+    // -------------------------------------------------------------------
+    bool CJoystickWorker::IsStopping()
+    {
+        lock_guard<mutex> lockGuard(m_StateMutex);
+        return m_state == EWorkerState::Stopping;
+    }
+
+    // -------------------------------------------------------------------
+    bool CJoystickWorker::IsRunning()
+    {
+        lock_guard<mutex> lockGuard(m_StateMutex);
+        return m_state == EWorkerState::Running;
+    }
+
+    // -------------------------------------------------------------------
+    bool CJoystickWorker::isStarting()
+    {
+        lock_guard<mutex> lockGuard(m_StateMutex);
+        return m_state == EWorkerState::Starting;
+    }
+
+    // -------------------------------------------------------------------
+    void  CJoystickWorker::SetState(EWorkerState state)
+    {
+        lock_guard<mutex> lockGuard(m_StateMutex);
+        m_state = state;
     }
 
     // -------------------------------------------------------------------
     CJoystickWorker::~CJoystickWorker()
     {
-        m_thd.join();
+        if (m_thd.joinable())
+        {
+            m_thd.join();
+        }
     }
 }
