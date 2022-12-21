@@ -1,5 +1,8 @@
 #!/bin/sh
 
+apt-get update
+apt-get upgrade
+
 # Install dependency
 
 # GIT
@@ -12,6 +15,9 @@ apt-get install cmake
 apt-get install build-essential
 gcc -v
 make -v
+
+# ninja 
+apt install ninja-build
 
 # SSL
 apt-get install libssl-dev
@@ -66,26 +72,6 @@ fi
 
 # configure dynamic linker run-time bindings
 ldconfig
-
-# Phidgets
-# libusb-1.0 for phidgets
-# https://www.phidgets.com/docs/OS_-_Linux
-apt-get install libusb-1.0-0-dev
-
-cd $ThirdpartyDir
-if [ -z $(ls | grep libphidget22) ]; then
-    cd $DownloadsDir
-    wget https://www.phidgets.com/downloads/phidget22/libraries/linux/libphidget22.tar.gz
-    tar xvzf ./libphidget22.tar.gz -C "$ThirdpartyDir"
-
-    cd $ThirdpartyDir
-    cd ./$(ls | grep libphidget22)
-    ./configure
-    make
-    make install
-else
-    echo "libphidget22 exists"
-fi
 
 
 #JSON 11

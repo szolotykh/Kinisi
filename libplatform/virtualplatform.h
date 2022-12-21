@@ -18,16 +18,16 @@ namespace platform
             ~CVirtualPlatform() override;
 
         public:
-            void Build() override;
+            bool Start() override;
 
             // Speed and velocity
             void Move(velocity_t v) override;
-            void Forward (double speed) override;
-            void Backward (double speed) override;
-            void RotateLeft(double speed) override;
-            void RotateRight(double speed) override;
-	        void Left(double speed) override;
-	        void Right(double speed) override;
+            void Forward (int speed) override;
+            void Backward (int speed) override;
+            void RotateLeft(int speed) override;
+            void RotateRight(int speed) override;
+	        void Left(int speed) override;
+	        void Right(int speed) override;
 	        void Stop() override;
             
         private:

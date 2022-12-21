@@ -28,13 +28,16 @@ namespace platform
             ~CPlatformWorker();
 
         public:
+            bool Start();
             void Stop();
 
         private:
             bool isStopping();
-            void fProcess (platform_settings_t settings);
+            void fProcess (IPlatformPtr upPlatform);
 
         private:
+            platform_settings_t m_settings;
+
             std::thread m_thd;
             std::mutex m_StopMutex;
             bool m_bShutdown;

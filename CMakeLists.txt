@@ -1,5 +1,5 @@
 cmake_minimum_required (VERSION 2.8.2)
-project (robot)
+ 
 
 set(CMAKE_CXX_STANDARD 17)
 
@@ -17,16 +17,7 @@ include_directories("${PROJECT_SOURCE_DIR}/libplatform")
 include_directories("${PROJECT_SOURCE_DIR}/libmqtt")
 include_directories("${PROJECT_SOURCE_DIR}/libutil")
 include_directories("${PROJECT_SOURCE_DIR}/libcommon")
-
-set(HEADERS
-   ${CMAKE_CURRENT_SOURCE_DIR}/settings.h
-   ${HEADERS}
-)
-
-set(SOURCE
-   ${CMAKE_CURRENT_SOURCE_DIR}/settings.cpp
-   ${SOURCE}
-)
+include_directories("${PROJECT_SOURCE_DIR}/libjoystick")
 
 # Add subdirectories
 add_subdirectory("${PROJECT_SOURCE_DIR}/libsettings")
@@ -34,8 +25,9 @@ add_subdirectory("${PROJECT_SOURCE_DIR}/libmqtt")
 add_subdirectory("${PROJECT_SOURCE_DIR}/libplatform")
 add_subdirectory("${PROJECT_SOURCE_DIR}/libutil")
 add_subdirectory("${PROJECT_SOURCE_DIR}/libcommon")
+add_subdirectory("${PROJECT_SOURCE_DIR}/libjoystick")
 
 
 # Executables
 add_executable(robot ${SOURCE} ${HEADERS} robot.cpp)
-target_link_libraries(robot ${CMAKE_THREAD_LIBS_INIT} libutil libmqtt libsettings libplatform)
+target_link_libraries(robot ${CMAKE_THREAD_LIBS_INIT} libutil libmqtt libsettings libplatform libjoystick)

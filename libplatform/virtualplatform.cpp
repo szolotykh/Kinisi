@@ -16,8 +16,9 @@ namespace platform
     using namespace std;
 
     // -------------------------------------------------------------------
-    void CVirtualPlatform::Build()
+    bool CVirtualPlatform::Start()
         {
+        return true;
         }
 
     // -------------------------------------------------------------------
@@ -32,42 +33,42 @@ namespace platform
         }
 
     // -------------------------------------------------------------------
-    void CVirtualPlatform::Forward (double speed)
+    void CVirtualPlatform::Forward (int speed)
         {
         cout<<"FORWARD. Speed: " << speed << endl;
         Move({speed, 0, 0});
         }
 
     // -------------------------------------------------------------------
-    void CVirtualPlatform::Backward (double speed)
+    void CVirtualPlatform::Backward (int speed)
         {
         cout<<"BACKWARD. Speed: " << speed << endl;
         Move({-speed, 0, 0});
         }
 
     // -------------------------------------------------------------------
-    void CVirtualPlatform::RotateLeft(double speed)
+    void CVirtualPlatform::RotateLeft(int speed)
         {
         cout<<"ROTATE LEFT. Speed: " << speed << endl;
         Move({0, 0, speed});
         }
 
     // -------------------------------------------------------------------
-    void CVirtualPlatform::RotateRight(double speed)
+    void CVirtualPlatform::RotateRight(int speed)
         {
         cout << "ROTATE RIGHE. Speed: " << speed << endl;
         Move({0, 0, -speed});
         }
 
     // -------------------------------------------------------------------
-    void CVirtualPlatform::Left(double speed)
+    void CVirtualPlatform::Left(int speed)
         {
         cout << "LEFT. Speed: " << speed << endl;
         Move({0, speed, 0});
         }
 
     // -------------------------------------------------------------------
-    void CVirtualPlatform::Right(double speed)
+    void CVirtualPlatform::Right(int speed)
         {
         cout << "RIGHE. Speed: " << speed << endl;
         Move({0, -speed, 0});

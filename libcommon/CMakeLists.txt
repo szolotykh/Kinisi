@@ -6,11 +6,13 @@ set(HEADERS
    ${HEADERS}
    ${CMAKE_CURRENT_SOURCE_DIR}/command_manager.h
    ${CMAKE_CURRENT_SOURCE_DIR}/commands.h
+   ${CMAKE_CURRENT_SOURCE_DIR}/settings.h
 )
 
 set(SOURCE
    ${SOURCE}
    ${CMAKE_CURRENT_SOURCE_DIR}/internal/command_manager.cpp
+   ${CMAKE_CURRENT_SOURCE_DIR}/internal/settings.cpp
 )
 
 add_library(libcommon ${HEADERS} ${SOURCE})

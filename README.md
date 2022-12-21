@@ -9,10 +9,13 @@ Kinisi robotics platform is a mecanim wheels multipurpose platform. That can be 
 The project has a shell script that pulls all thirdparty dependencies and installs them.
 Follow instructions below to pull dependencies and build the project.
 ```
+apt-get update
+apt-get upgrade
+
 sudo ./getthirdparty.sh
 mkdir ./build
 cd ./build
-cmake .
+cmake . 
 cmake --build .
 ```
 

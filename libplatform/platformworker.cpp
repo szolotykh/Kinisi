@@ -18,9 +18,22 @@ namespace platform
     // -------------------------------------------------------------------
     CPlatformWorker::CPlatformWorker(platform_settings_t settings)
         : m_bShutdown (false)
-        , m_thd (std::thread (&CPlatformWorker::fProcess, this, settings))
+        , m_settings (settings)
         {
         }
+     
+    // -------------------------------------------------------------------
+    bool CPlatformWorker::Start()
+    {
+        IPlatformPtr upPlatform = BuildPlatform(platform_type_t::REAL);
+        if (!upPlatform->Start())
+        {
+            return false;
+        }
+
+        m_thd = std::thread (&CPlatformWorker::fProcess, this, upPlatform);
+        return true;
+    }
 
     // -------------------------------------------------------------------
     void CPlatformWorker::Stop() 
@@ -37,10 +50,8 @@ namespace platform
         }
 
     // -------------------------------------------------------------------
-    void CPlatformWorker::fProcess (platform_settings_t settings)
+    void CPlatformWorker::fProcess (IPlatformPtr upPlatform)
         {
-        IPlatformPtr upPlatform = BuildPlatform(platform_type_t::VIRTUAL);
-        
         // Worker main loop
         while (!isStopping ())
             {
@@ -56,6 +67,9 @@ namespace platform
     // -------------------------------------------------------------------
     CPlatformWorker::~CPlatformWorker()
         {
-        m_thd.join();
+        if (m_thd.joinable())
+            {
+            m_thd.join();
+            }
         }
     }
