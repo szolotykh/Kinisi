@@ -72,7 +72,7 @@ int main() {
                 {
                 lock_guard<mutex> lockGuard(VelocityUpdateMutex);
                 int speed = (double)event.value / 327.68f;
-                velocity.y = speed;
+                velocity.y = -speed;
                 }
                 break;
 

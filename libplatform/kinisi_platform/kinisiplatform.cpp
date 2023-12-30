@@ -17,9 +17,11 @@
 #include <stdio.h>
 #include "platform.h"
 #include "kinisiplatform.h"
+#include "controller.h"
 #include <string.h>
 #include <termios.h>
 #include <assert.h>
+#include <vector>
 
 #define SPEED_RESOLUTION 840
 
@@ -30,46 +32,10 @@ namespace platform
     // -------------------------------------------------------------------
     bool CKinisiPlatform::Start()
     {
-        m_usb = open("/dev/ttyACM0", O_RDWR | O_NOCTTY);
-        cout << "> m_usb: " << m_usb << endl;
-        if (m_usb == -1)
+        if (!controller.connect("/dev/ttyACM0"))
         {
             return false;
         }
-        
-        struct termios tty;
-
-        memset(&tty, 0, sizeof tty);
-        /* Error Handling */
-        if (tcgetattr(m_usb, &tty) != 0)
-            {
-            std::cout << "> Error " << errno << " from tcgetattr: " << strerror(errno) << std::endl;
-            }
-
-        /* Set Baud Rate */
-        cfsetospeed(&tty, (speed_t)B115200);
-        cfsetispeed(&tty, (speed_t)B115200);
-
-        /* Setting other Port Stuff */
-        tty.c_cflag &= ~PARENB;            // Make 8n1
-        tty.c_cflag &= ~CSTOPB;
-        tty.c_cflag &= ~CSIZE;
-        tty.c_cflag |= CS8;
-
-        tty.c_cflag &= ~CRTSCTS;           // no flow control
-        //tty.c_cc[VMIN] = 1;                  // read doesn't block
-        //tty.c_cc[VTIME] = 10;                  // 0.5 seconds read timeout
-        //tty.c_cflag |= CREAD | CLOCAL;     // turn on READ & ignore ctrl lines
-
-        /* Make raw */
-        cfmakeraw(&tty);
-
-        /* Flush Port, then applies attributes */
-        tcflush(m_usb, TCIFLUSH);
-        if (tcsetattr(m_usb, TCSANOW, &tty) != 0)
-            {
-            std::cout << "> Error " << errno << " from tcsetattr" << std::endl;
-            }
 
         InitPlatform();
         return true;
@@ -78,9 +44,8 @@ namespace platform
     // -------------------------------------------------------------------
     void CKinisiPlatform::InitPlatform()
     {
-        unsigned char initCmd[] = { PLATFORM_INITIALIZE };
-        int n_written = write(m_usb, initCmd, sizeof(initCmd));
-        std::this_thread::sleep_for(0.5s);
+        controller.initialize_omni_platform(false, false, false, 1, 1);
+        cout << "Omni platform initialized" << endl;
     }
 
     // -------------------------------------------------------------------
@@ -90,8 +55,20 @@ namespace platform
         //assert(v.y <= 100 || v.y >= -100);
         //assert(v.t <= 100 || v.t >= -100);
 
-        unsigned char cmd[] = { PLATFORM_SET_VELOCITY_INPUT, v.x, v.y, v.t};
-        int n_written = write(m_usb, cmd, sizeof(cmd));
+        /*
+        std::vector<unsigned char> msg { 
+            PLATFORM_SET_VELOCITY_INPUT, 
+            static_cast<unsigned char>(v.x),
+            static_cast<unsigned char>(v.y),
+            static_cast<unsigned char>(v.t)};
+        WriteMessage(msg);
+        */
+
+        controller.set_platform_velocity_input(
+            static_cast<int8_t>(v.x),
+            static_cast<int8_t>(v.y),
+            static_cast<int8_t>(v.t));
+        cout << "SetVelocityInput: " << v.x << ", " << v.y << ", " << v.t << endl;
     } 
 
     // -------------------------------------------------------------------
@@ -178,6 +155,6 @@ namespace platform
     // -------------------------------------------------------------------
     CKinisiPlatform::~CKinisiPlatform()
     {
-        close(m_usb);
+
     }
 }

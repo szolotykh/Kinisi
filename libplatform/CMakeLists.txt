@@ -20,7 +20,7 @@ set(SOURCE
 
 
 
-add_library(libplatform ${HEADERS} ${SOURCE} "kinisi_platform/kinisiplatform.cpp" "kinisi_platform/kinisiplatform.h")
+add_library(libplatform ${HEADERS} ${SOURCE} "kinisi_platform/controller.h" "kinisi_platform/kinisiplatform.cpp" "kinisi_platform/kinisiplatform.h" "kinisi_platform/controller.cpp" "kinisi_platform/kinisicommands.h")
 
 target_include_directories(libplatform
    PRIVATE
